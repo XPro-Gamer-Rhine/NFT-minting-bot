@@ -1,0 +1,27 @@
+// // SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+import '@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol';
+
+contract NFT is ERC721URIStorage {
+  uint256 public tokenCounter; // count for each NFT
+
+  /// @notice constructor function will pass collection name and symbol to the parent contract that we have inherited from openzeppelin
+  /// @param collectionName is the collection name of the NFT
+  /// @param collectionSymbol is the collection symbol
+  constructor(string memory collectionName, string memory collectionSymbol) ERC721(collectionName, collectionSymbol) {
+    tokenCounter = 1;
+  }
+
+  /// @notice An aritst can mint their NFT using this function
+  /// @param tokenURI tokenURI is the string that we will get after uploading the NFT on off-chain (eg: IPFS etc)
+  /// @return newTokenId is the unique an identifier for each minted NFT using this contract
+  function createCollectible(string memory tokenURI) public returns (uint256) {
+    uint256 newTokenId = tokenCounter;
+    _safeMint(msg.sender, newTokenId);
+    _setTokenURI(newTokenId, tokenURI);
+    tokenCounter = tokenCounter + 1;
+    return newTokenId;
+  }
+  
+}
